@@ -5,11 +5,14 @@
 #include <ctime>
 
 int parseFile(const char* file_name);
+void someFunction(bool fail1, bool fail2);
 
 
 int main() {
 
-	const char* file = NULL;
+	//someFunction(false,true);
+
+	const char* file = "keywords.txt";
 	int r = parseFile(file);
 
 	printf("parseFile returns %d\n", r);
@@ -36,45 +39,71 @@ void test_time()
 }
 
 
+void someFunction(bool fail1, bool fail2) {
+	if (fail1)
+	{
+		printf("fail 1\n");
+		goto cleanup1;
+	}
+	if (fail2)
+	{
+		printf("fail 2\n");
+		goto cleanup2;
+	}
+	printf("main functionality\n");
+cleanup2:
+	printf("cleanup 2\n");
+cleanup1:
+	printf("cleanup 1\n");
+}
+
+int searchFileForKeywords(FILE* file_pointer, char* buffer, int BUFFER_SIZE)
+{
+	/* parse file content*/
+	int NO_KEYWORD_FOUND = 2;
+	int return_value = NO_KEYWORD_FOUND;
+	int KEYWORD_ONE_FOUND_FIRST = 3;
+	int KEYWORD_TWO_FOUND_FIRST = 4;
+	while (fgets(buffer, BUFFER_SIZE, file_pointer) != NULL)
+	{
+		//printf("%s", buffer);
+		if (strcmp("KEYWORD_ONE\n", buffer) == 0)
+		{
+			return_value = KEYWORD_ONE_FOUND_FIRST;
+			break;
+		}
+		if (strcmp("KEYWORD_TWO\n", buffer) == 0)
+		{
+			return_value = KEYWORD_TWO_FOUND_FIRST;
+			break;
+		}
+	}
+	return return_value;
+}
+
+
 int parseFile(const char* file_name) {
 	int BUFFER_SIZE = 256;
 	int ERROR = 1;
-	int NO_KEYWORD_FOUND = 2;
-	int KEYWORD_ONE_FOUND_FIRST = 3;
-	int KEYWORD_TWO_FOUND_FIRST = 4;
+
 
 	int return_value = ERROR;
 
 	assert(file_name != nullptr && "Filename is NULL");
 
+	FILE* file_pointer = file_pointer = fopen(file_name, "r");
 
-	FILE* file_pointer = 0;
-	if ((file_pointer = fopen(file_name, "r")))
+	if (!file_pointer)
+		return return_value;
+
+	char* buffer = 0;
+	if ((buffer = (char*)malloc(BUFFER_SIZE)))
 	{
-		char* buffer = 0;
-		if ((buffer = (char*)malloc(BUFFER_SIZE)))
-		{
-			/* parse file content*/
-			return_value = NO_KEYWORD_FOUND;
-			while (fgets(buffer, BUFFER_SIZE, file_pointer) != NULL)
-			{
-				//printf("%s", buffer);
-				if (strcmp("KEYWORD_ONE\n", buffer) == 0)
-				{
-					return_value = KEYWORD_ONE_FOUND_FIRST;
-					break;
-				}
-				if (strcmp("KEYWORD_TWO\n", buffer) == 0)
-				{
-					return_value = KEYWORD_TWO_FOUND_FIRST;
-					break;
-				}
-			}
-			free(buffer);
-		}
-		int _ = fclose(file_pointer);
-
+		return_value = searchFileForKeywords(file_pointer, buffer, BUFFER_SIZE);
+		free(buffer);
 	}
+	int _ = fclose(file_pointer);
+
 	return return_value;
 }
 
