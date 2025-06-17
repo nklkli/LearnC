@@ -1,21 +1,45 @@
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
+
+#include <assert.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 int parseFile(const char* file_name);
 void someFunction(bool fail1, bool fail2);
 
+typedef struct {
+	int x;
+	int y;
+} point_t;
+
+typedef struct {
+	point_t center;
+	int radius;
+} circle_t;
+
+typedef struct {
+	point_t start;
+	point_t end;
+} line_t;
+
+void bar();
+
+int nnn;
 
 int main() {
 
+	bar();
+
+	
+	printf("nnn = %d\n", nnn);
+
 	//someFunction(false,true);
 
-	const char* file = "keywords.txt";
+	/*const char* file = "keywords.txt";
 	int r = parseFile(file);
 
-	printf("parseFile returns %d\n", r);
+	printf("parseFile returns %d\n", r);*/
 
 	return(0);
 }
@@ -23,11 +47,11 @@ int main() {
 
 void test_time()
 {
-	time_t tictoc = time(nullptr);
+	time_t tictoc = time(NULL);
 	printf("The time is now %lld\n", tictoc);
 
 	char buffer[50];
-	_ctime64_s(buffer, &tictoc);
+	_ctime64_s(buffer, 50, &tictoc);
 	printf("The time is now %s\n", buffer);
 
 	struct tm today;
@@ -89,7 +113,7 @@ int parseFile(const char* file_name) {
 
 	int return_value = ERROR;
 
-	assert(file_name != nullptr && "Filename is NULL");
+	assert(file_name != NULL && "Filename is NULL");
 
 	FILE* file_pointer = file_pointer = fopen(file_name, "r");
 
