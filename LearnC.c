@@ -3,7 +3,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+#include <Windows.h>
+#include  <consoleapi.h>
+
+
 
 int parseFile(const char* file_name);
 void someFunction(bool fail1, bool fail2);
@@ -27,13 +32,48 @@ void bar();
 
 int nnn;
 
-int main() {
+BOOL WINAPI ConsoleCtrlHandler(DWORD CtrlType)
+{
+	if (CtrlType== CTRL_C_EVENT)
+	{
+		printf("Control+C");
+		return TRUE;
+	}
+	return FALSE;
+}
 
-	bar();
+
+int main(int argc, char** argv) {
+	// https://learn.microsoft.com/en-us/windows/console/setconsolectrlhandler?redirectedfrom=MSDN
+	SetConsoleCtrlHandler(ConsoleCtrlHandler, TRUE);
+
+	putchar(208);
+	putchar(186);
+
+	int c;
+	while ((c=getchar())!=EOF)
+	{
+		putchar(c);
+	}
+
+	return 0;
+	
+
+	//int c = getchar();
+	//while (c!=EOF)
+	//{
+	//	putchar(c);
+	//	c = getchar();
+	//}
+
+	exit(0);
+
+	for (int fahr = 0; fahr <= 300; fahr=fahr+20)
+	{
+		printf("%3d%6.1f\n", fahr, (5.f / 9.f) * (fahr - 32));
+	}
 
 	
-	printf("nnn = %d\n", nnn);
-
 	//someFunction(false,true);
 
 	/*const char* file = "keywords.txt";
@@ -108,10 +148,10 @@ int searchFileForKeywords(FILE* file_pointer, char* buffer, int BUFFER_SIZE)
 
 int parseFile(const char* file_name) {
 	int BUFFER_SIZE = 256;
-	int ERROR = 1;
+	int ERROR_ = 1;
 
 
-	int return_value = ERROR;
+	int return_value = ERROR_;
 
 	assert(file_name != NULL && "Filename is NULL");
 
